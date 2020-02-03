@@ -12,10 +12,16 @@
 
     1. 템플릿 열기 
     2. 연결할 AWS Account 계정에 해당되는 IAM User 로 로그인
-    3. ![alt text](https://github.com/BespinGlobal-KimYeongSeok/autospot-hands-on-tech-friday/blob/master/cf_approve.png "Approve")
+    3. 스택생성 동의  
+     
+![Approve](https://user-images.githubusercontent.com/60588746/73698971-edf77100-4725-11ea-8686-31077386feb5.png)
+    
     4. 역할 ARN 복사 후 붙여 넣기 후 추가 
 </details> 
-    
+
+
+
+
 
 
 
