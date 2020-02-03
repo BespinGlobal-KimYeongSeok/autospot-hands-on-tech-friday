@@ -12,7 +12,7 @@
 
     1. 템플릿 열기 
     2. 연결할 AWS Account 계정에 해당되는 IAM User 로 로그인
-    3. ![alt text](file://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
+    3. ![alt text](https://github.com/BespinGlobal-KimYeongSeok/autospot-hands-on-tech-friday/blob/master/cf_approve.png "Approve")
     4. 역할 ARN 복사 후 붙여 넣기 후 추가 
 </details> 
     
