@@ -54,9 +54,29 @@
 
 
 > ## Spot Analyzer 를 통한 Stateless Elastigroup 생성
->   - ### Appication Load Balancer 
->   - ### Auto Scaling Group 
->   - ### ASG Clone 을 통한 Elastigroup 
+<h3>
+ <details>
+ <summary>Step 1. 사전 환경 구성</summary>
+
+    1. AWS CLI 설치   
+       * 필요 이유: 제공된 AWS CLI Script 로 ALB, AutoScalingGroup 생성을 위함 
+       * AWS 공식 가이드 참조 
+            - MAC:  https://docs.aws.amazon.com/cli/latest/userguide/install-macos.html
+            - Windows: https://docs.aws.amazon.com/cli/latest/userguide/install-windows.html
+  
+    2. AutoScalingGroup 생성
+    3. ALB 생성
+
+    
+
+
+
+</details> 
+</h3>
+
+ ### Appication Load Balancer 
+ ### Auto Scaling Group 
+ ### ASG Clone 을 통한 Elastigroup 
 
 
 
