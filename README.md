@@ -1,12 +1,8 @@
 # AutoSpot Hands-On Guideline on Tech Friday
 
 > ## AutoSpot 서비스 사용을 위한 AWS Account 계정연결   
-<details>
-<summary>  
-
-### Step1. Cost Management > AutoSpot 메뉴 클릭 
- </summary>
-
+<h3><details><summary>Step1. Cost Management > AutoSpot 메뉴 클릭</summary>
+ 
  ![cm_autospot_menu](https://user-images.githubusercontent.com/60588746/73699880-5ba49c80-4728-11ea-95e0-dee85714d591.png) 
 
 </details> 
@@ -54,7 +50,7 @@
 ![autospot_entry](https://user-images.githubusercontent.com/60588746/73700080-eb4a4b00-4728-11ea-9d93-b58651a79b68.png)
 
 </details> 
-
+</h3>
 
 
 > ## Spot Analyzer 를 통한 Stateless Elastigroup 생성
