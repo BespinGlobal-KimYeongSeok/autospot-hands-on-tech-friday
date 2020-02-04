@@ -1,0 +1,5 @@
+aws autoscaling create-auto-scaling-group --auto-scaling-group-name my-asg \
+  --launch-template "LaunchTemplateName=my-launch-template,Version=1" \
+  --vpc-zone-identifier "subnet-5ea0c127,subnet-6194ea3b,subnet-c934b782" \
+  --target-group-arns "arn:aws:elasticloadbalancing:region:123456789012:targetgroup/my-targets/1234567890123456" \
+  --max-size 5 --min-size 1 --desired-capacity 2
