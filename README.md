@@ -86,14 +86,31 @@ ___
     <summary>AWS CLI 이용하기</summary> 
 
     * Git 설치 
-      * Git on a Mac
-        * Step 1 – Homebrew 설치
-          * Terminal 윈도우에서 다음 명령어 실행  
-            `$ ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`  
-            `$ brew doctor`  
-        * Step 2 – Git 설치
-            * Terminal 윈도우에서 다음 명령어 실행  
-            `$ brew install git"`
+      *  Mac  
+           * Step 1 – Homebrew 설치
+             * Terminal 윈도우에서 다음 명령어 실행  
+               `$ ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`       
+               `$ brew doctor`      
+           * Step 2 – Git 설치
+               * Terminal 윈도우에서 다음 명령어 실행  
+               `$ brew install git"`
+      *  Windows
+          * Step 1 – [Chocolatey 설치](https://chocolatey.org/docs/installation)
+            * 관리자 권한으로 cmd.exe 또는 powershell.exe 실행
+              * 다음 명령줄 복사 후 붙여넣고 실행
+                * cmd.exe 사용시
+                  `$ @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command " [System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"`       
+                * powershell.exe 사용시
+                  `$ Get-ExecutionPolicy` 실행 결과 값이 `Restricted` 인경우 `$ Set-ExecutionPolicy AllSigned` 또는 `$ Set-ExecutionPolicy Bypass -Scope Process` 실행.
+                  `$ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))`
+              
+              
+          * Step 2 – Git 설치
+              * Terminal 윈도우에서 다음 명령어 실행  
+               `$ choco install git` 
+              
+
+
 
     * AWS CLI 설치 
       * AWS 공식 가이드 참조 
@@ -101,9 +118,9 @@ ___
           * [Windows](https://docs.aws.amazon.com/cli/latest/userguide/install-windows.html)
     
     * 제공된 스크립트로 Application Load Balancer, Target Group, Listener, AutoScalingGroup 생성하기  
-        `git clone https://github.com/BespinGlobal-KimYeongSeok/autospot-hands-on-tech-friday` 
-        `cd autospot-hands-on-tech-friday/asg-alb-listener-targetgroup` 
-        `./create_alb_targetgroup_asg.sh` 
+      `$ git clone https://github.com/BespinGlobal-KimYeongSeok/autospot-hands-on-tech-friday`  
+      `$ cd autospot-hands-on-tech-friday/asg-alb-listener-targetgroup`  
+      `$ ./create_alb_targetgroup_asg.sh`  
 
     </details>
 
