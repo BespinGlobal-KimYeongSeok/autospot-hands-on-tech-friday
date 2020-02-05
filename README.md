@@ -85,10 +85,25 @@ ___
 * <details>
     <summary>AWS CLI</summary> 
 
-    * AWS CLI 설치 필요
+    * Git 설치 
+      * *Git* on a *Mac*
+        * Step 1 – [*Homebrew*](http://brew.sh/) 설치
+          * **Copy & paste the following** into the terminal window and **hit `Return`**  
+            * `$ ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`
+            * `$ brew doctor`
+        * Step 2 –  Git 설치
+            * **Copy & paste the following** into the terminal window and **hit `Return`**  
+            * `$ brew install git"`
+
+    * AWS CLI 설치 
       * AWS 공식 가이드 참조 
           * [MAC](https://docs.aws.amazon.com/cli/latest/userguide/install-macos.html)  
           * [Windows](https://docs.aws.amazon.com/cli/latest/userguide/install-windows.html)
+    
+    * 제공된 스크립트로 Application Load Balancer, Target Group, Listener, AutoScalingGroup 생성하기  
+        * `git clone https://github.com/BespinGlobal-KimYeongSeok/autospot-hands-on-tech-friday` 
+        * `cd autospot-hands-on-tech-friday/asg-alb-listener-targetgroup` 
+        * `./create_alb_targetgroup_asg.sh` 
 
     </details>
 
