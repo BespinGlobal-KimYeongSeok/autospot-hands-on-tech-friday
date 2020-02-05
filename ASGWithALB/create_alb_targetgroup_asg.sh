@@ -21,24 +21,32 @@ SCRIPT="aws elbv2 create-load-balancer --name $ALB_NAME --subnets $SUBNET_LIST -
 
 clb_response=$(eval $SCRIPT)
 echo "response>>$clb_response"
-alb_arn=($clb_response )
+alb_arn=$clb_response 
 echo $alb_arn
 
 result=$?
 echo $result
 if [ $result -eq 0 ]; then
     echo "ALB 생성에 성공하였습니다."
+    local VPC_ID="vpc-3c450346"
     vared -p "대상그룹을 생성할 VPC ID를 입력해 주세요.:" -c VPC_ID
     echo $VPC_ID
     vared -p "대상그룹 이름을 입력해 주세요.:" -c TARGET_GROUP
     echo $TARGET_GROUP
-    SCRIPT="aws elbv2 create-target-group --name $TARGET_GROUP --protocol HTTP --port 80 --vpc-id $VPC_ID"
-    echo "Executing the command: \n$SCRIPT"
-    eval $SCRIPT    
+    SCRIPT="aws elbv2 create-target-group --name $TARGET_GROUP --protocol HTTP --port 80 --vpc-id $VPC_ID | jq -r '.TargetGroups[].TargetGroupArn'"
+    echo "Script: $SCRIPT"
+    target_group_arn=$(eval $SCRIPT)    
     local result=$?
-    if [ result -eq 0 ]; then
+    if [ $result -eq 0 ]; then
         echo "대상그룹 생성에 성공하였습니다."
 
+        echo "생성된 어플리케이션 로드 발란서의 HTTP:80 Request 를 생성한 대상그룹으로 포워딩할 리스너를 생성합니다."
+        SCRIPT="aws elbv2 create-listener --load-balancer-arn $alb_arn --protocol HTTP --port 80 --default-actions Type=forward,TargetGroupArn=$target_group_arn --region $REGION_CODE"
+        eval $SCRIPT
+        local result=$?
+        if [ $result -eq 0 ]; then
+            echo "리스너 등록에 성공하였습니다."
+            exit 0        
     else 
         echo "대상그룹 생성에 실패하였습니다."
         exit 1
