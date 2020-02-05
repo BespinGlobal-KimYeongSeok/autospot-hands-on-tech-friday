@@ -5,8 +5,10 @@
  
  ![cm_autospot_menu](https://user-images.githubusercontent.com/60588746/73699880-5ba49c80-4728-11ea-95e0-dee85714d591.png) 
 
-</details> 
+</details>
+</h3> 
 
+<h3>
 <details>
  <summary>Step 2. 계정 추가 버튼 클릭</summary>
 
@@ -14,6 +16,9 @@
 
 
 </details> 
+</h3>
+
+<h3>
 <details>
  <summary>Step 3. CloudFormation 사용 탭으로 연결계정 추가</summary>
 
@@ -31,16 +36,19 @@
     5. 역할 ARN 복사 후 붙여 넣기 후 추가 버튼 클릭 후 계정등록 계속 진행
 
 ![paste_role_arn](https://user-images.githubusercontent.com/60588746/73699692-d15c3880-4727-11ea-9f3a-badf5cc37dcd.png)
-
 </details> 
+</h3>
 
+<h3>
 <details>
  <summary>Step 4. 연결 계정목록 확인</summary>
 
 ![account_list](https://user-images.githubusercontent.com/60588746/73700081-eb4a4b00-4728-11ea-86ff-12d450002697.png)
 
 </details> 
+</h3>
 
+<h3>
 <details>
  <summary>Step 5. 연결계정별 AutoSpot 관리콘솔 진입</summary>
 
@@ -51,35 +59,62 @@
 
 </details> 
 </h3>
+</h3>
 
+___
 
 > ## Spot Analyzer 를 통한 Stateless Elastigroup 생성
 <h3>
  <details>
- <summary>Step 1. 사전 환경 구성</summary>
+ <summary>Step 1. 사전 환경 구성</summary>  
 
-    1. AWS CLI 설치   
-       * 필요 이유: 제공된 AWS CLI Script 로 ALB, AutoScalingGroup 생성을 위함 
-       * AWS 공식 가이드 참조 
-            - MAC:  https://docs.aws.amazon.com/cli/latest/userguide/install-macos.html
-            - Windows: https://docs.aws.amazon.com/cli/latest/userguide/install-windows.html
-  
-    2. AutoScalingGroup 생성
-    3. ALB 생성
+* <details>
+    <summary>AWS 관리 콘솔</summary> 
 
-    
 
+   * [AWS Console Link](https://aws.amazon.com/console/) 로그인 후 진행
+     * Application Load Balancer 생성
+       * [공식가이드참조](https://docs.aws.amazon.com/ko_kr/elasticloadbalancing/latest/application/create-application-load-balancer.html)
+     * Auto Scaling Group 생성
+       * [공식가이드참조](https://docs.aws.amazon.com/ko_kr/autoscaling/ec2/userguide/create-asg-ec2-wizard.html)
+     * Auto Scaling Group을 Load Balancer 에 연결
+       * [공식가이드참조](https://docs.aws.amazon.com/ko_kr/autoscaling/ec2/userguide/attach-load-balancer-asg.html)
+
+    </details>
+
+* <details>
+    <summary>AWS CLI</summary> 
+
+    * AWS CLI 설치 필요
+      * AWS 공식 가이드 참조 
+          * [MAC](https://docs.aws.amazon.com/cli/latest/userguide/install-macos.html)  
+          * [Windows](https://docs.aws.amazon.com/cli/latest/userguide/install-windows.html)
+
+    </details>
+
+</details> 
+</h3>
+
+
+<h3>
+ <details>
+ <summary>Step 2. Spot Analyzer 로 Discover & Clone </summary>
 
 
 </details> 
 </h3>
 
- ### Appication Load Balancer 
- ### Auto Scaling Group 
- ### ASG Clone 을 통한 Elastigroup 
+<h3>
+ <details>
+ <summary>Step 3. Elastigroup 확인  </summary>
+
+
+</details> 
+</h3>
 
 
 
 
 
 
+___ 
