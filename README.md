@@ -69,7 +69,7 @@ ___
  <summary>Step 1. 사전 환경 구성</summary>  
 
 * <details>
-    <summary>AWS 관리 콘솔</summary> 
+    <summary>AWS 관리 콘솔 이용하기</summary> 
 
 
    * [AWS Console Link](https://aws.amazon.com/console/) 로그인 후 진행
@@ -83,17 +83,17 @@ ___
     </details>
 
 * <details>
-    <summary>AWS CLI</summary> 
+    <summary>AWS CLI 이용하기</summary> 
 
     * Git 설치 
-      * *Git* on a *Mac*
-        * Step 1 – [*Homebrew*](http://brew.sh/) 설치
-          * **Copy & paste the following** into the terminal window and **hit `Return`**  
-            * `$ ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`
-            * `$ brew doctor`
-        * Step 2 –  Git 설치
-            * **Copy & paste the following** into the terminal window and **hit `Return`**  
-            * `$ brew install git"`
+      * Git on a Mac
+        * Step 1 – Homebrew 설치
+          * Terminal 윈도우에서 다음 명령어 실행  
+            `$ ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`  
+            `$ brew doctor`  
+        * Step 2 – Git 설치
+            * Terminal 윈도우에서 다음 명령어 실행  
+            `$ brew install git"`
 
     * AWS CLI 설치 
       * AWS 공식 가이드 참조 
@@ -101,9 +101,9 @@ ___
           * [Windows](https://docs.aws.amazon.com/cli/latest/userguide/install-windows.html)
     
     * 제공된 스크립트로 Application Load Balancer, Target Group, Listener, AutoScalingGroup 생성하기  
-        * `git clone https://github.com/BespinGlobal-KimYeongSeok/autospot-hands-on-tech-friday` 
-        * `cd autospot-hands-on-tech-friday/asg-alb-listener-targetgroup` 
-        * `./create_alb_targetgroup_asg.sh` 
+        `git clone https://github.com/BespinGlobal-KimYeongSeok/autospot-hands-on-tech-friday` 
+        `cd autospot-hands-on-tech-friday/asg-alb-listener-targetgroup` 
+        `./create_alb_targetgroup_asg.sh` 
 
     </details>
 
