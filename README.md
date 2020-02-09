@@ -120,6 +120,13 @@ ___
       * AWS 공식 가이드 참조 
           * [MAC](https://docs.aws.amazon.com/cli/latest/userguide/install-macos.html)  
           * [Windows](https://docs.aws.amazon.com/cli/latest/userguide/install-windows.html)
+
+    * AWS Configure 구성 
+      * Terminal Window 에서 다음 명령어 실행 후 ACCESS_KEY, SECRET_ACCESS_KEY, Default Region 입력. 
+        * `$ aws configure`
+        * ![aws_configure](https://user-images.githubusercontent.com/60588746/74112543-f1d13a80-4be0-11ea-9872-316d936b4abd.png)
+  
+      
     
     * 제공된 스크립트로 Application Load Balancer, Target Group, Listener, AutoScalingGroup 생성하기  
       * `$ git clone https://github.com/BespinGlobal-KimYeongSeok/autospot-hands-on-tech-friday`  
