@@ -137,8 +137,8 @@ create_listener_with_alb_targetgroup(){
 #Variable Init
 init_variables
 
-#
+#Get Default VPC 
 get_default_vpc_from_region
 
-
+#Get Default VPC 
 select_subnets_or_input
