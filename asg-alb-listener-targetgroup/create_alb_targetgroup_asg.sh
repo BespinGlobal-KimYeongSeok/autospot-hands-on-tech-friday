@@ -2,7 +2,8 @@
 
 init_variables(){
 
-     default_vpc_id="##"
+     default_vpc_id=""
+
 }
 
 
@@ -20,7 +21,7 @@ get_default_vpc_from_region () {
 }
 
 multi_select_from_array(){
-    
+    subnet_choices=()
     echo "options: $subnets_arr"
     menu() {
         echo "Avaliable options:"
@@ -36,6 +37,7 @@ multi_select_from_array(){
         (( num > 0 && num <= ${#subnets_arr[@]} )) ||
         { msg="Invalid option: $num"; continue; }
         ((num--)); msg="${subnets_arr[num]} was ${choices[num]:+un}checked"
+        subnet_choices[num]=${subnets_arr[num]}
         [[ "${choices[num]}" ]] && choices[num]="" || choices[num]="+"
     done
     
@@ -44,20 +46,19 @@ multi_select_from_array(){
         [[ "${choices[i]}" ]] && { printf " %s" "${subnets_arr[i]}"; msg=""; }
     done
     echo "$msg"
-    echo "$choices"
+    echo $subnet_choices
 }
 
 
 select_subnets_or_input(){
     subnets_arr=( $(aws ec2 describe-subnets --filters Name=vpc-id,Values=vpc-3c450346 | jq -r '.Subnets[].SubnetId') )
     # vared -p "공백으로 구분된 서브넷 아이디 리스트를 입력해 주세요. ex) subnet-f830dcf6 subnet-33ba8b1d: " -c SUBNET_LIST
-    for subnet in ${subnets_arr[@]};
+    
+    multi_select_from_array 
+    for subnet in ${subnet_choices[@]};
     do 
         echo $subnet 
     done
-    multi_select_from_array 
-    # echo $choices
-    
     
 }
 
@@ -140,5 +141,5 @@ init_variables
 #Get Default VPC 
 get_default_vpc_from_region
 
-#Get Default VPC 
+#get subnets from default vpc
 select_subnets_or_input
