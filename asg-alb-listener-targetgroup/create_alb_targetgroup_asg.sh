@@ -4,10 +4,13 @@
 # Declare functions and variables ##
 ####################################
 init_variables(){
+    prog_name=$(basename $0)
     default_region_code=(`eval "aws configure get region"`)
     default_vpc_id=""
     subnet_choices=()
     default_alb_name="default-application-loadbalancer"
+    default_target_group_name="default-target-group-name"
+    target_group_arn=""
 }
 
 
@@ -103,39 +106,41 @@ create_application_load_balancer(){
     #3
     select_security_groups_or_input
 
-    echo $region_code
-    echo ${subnet_choices[@]}
-    SCRIPT="aws elbv2 create-load-balancer --name $alb_name --subnets ${subnet_choices[@]} --security-groups $default_security_group --region $region_code | jq -r '.LoadBalancers[].LoadBalancerArn'"
+    local script="aws elbv2 create-load-balancer --name $alb_name --subnets ${subnet_choices[@]} --security-groups $default_security_group --region $region_code | jq -r '.LoadBalancers[].LoadBalancerArn'"
+    clb_response=$(eval $script)
+    if [ $? -ne 0 ]; then
+        error_exit "Application Load Balancer 생성에 실패하였습니다."
+    else
+        alb_arn=$clb_response     
+        echo "Application Load Balancer 생성에 성공하였습니다."
+    fi
+    
+    #4
+    create_target_group
 
-    clb_response=$(eval $SCRIPT)
-    echo "response>>$clb_response"
-    alb_arn=$clb_response 
-    echo $alb_arn
+    #5
+    create_listener_with_alb_targetgroup
 
-    result=$?
-    echo $result
 }
 
 
 create_target_group(){
 
-    local VPC_ID="vpc-3c450346"
-    vared -p "대상그룹을 생성할 VPC ID를 입력해 주세요 :" -c VPC_ID
-    echo $VPC_ID
-    vared -p "대상그룹 이름을 입력해 주세요.:" -c TARGET_GROUP
-    echo $TARGET_GROUP
-    SCRIPT="aws elbv2 create-target-group --name $TARGET_GROUP --protocol HTTP --port 80 --vpc-id $VPC_ID | jq -r '.TargetGroups[].TargetGroupArn'"
-    echo "Script: $SCRIPT"
-    target_group_arn=$(eval $SCRIPT)    
-    local result=$?
+    read -p "대상그룹 이름을 입력해 주세요.(Enter시 기본 값 사용):" target_group_name
+    target_group_name=${target_group_name:-$default_target_group_name}
+    echo "대상그룹이름: $target_group_name"
+    
+    local script="aws elbv2 create-target-group --name $target_group_name --protocol HTTP --port 80 --vpc-id $default_vpc_id | jq -r '.TargetGroups[].TargetGroupArn'"
+    target_group_arn=$(eval $script)    
+    error_exit $? 
+    
 }
 
 create_listener_with_alb_targetgroup(){
     echo "생성된 어플리케이션 로드 발란서의 HTTP:80 Request 를 생성한 대상그룹으로 포워딩할 리스너를 생성합니다."
-    SCRIPT="aws elbv2 create-listener --load-balancer-arn $alb_arn --protocol HTTP --port 80 --default-actions Type=forward,TargetGroupArn=$target_group_arn --region $REGION_CODE"
-    eval $SCRIPT
-    local result=$?
-    if [ $result -eq 0 ]; 
+    local script="aws elbv2 create-listener --load-balancer-arn $alb_arn --protocol HTTP --port 80 --default-actions Type=forward,TargetGroupArn=$target_group_arn --region $region_code"
+    eval $script
+    if [ $? -ne 0 ]; 
     then
         echo "리스너 등록에 성공하였습니다."
         exit 0        
@@ -144,6 +149,12 @@ create_listener_with_alb_targetgroup(){
     fi
 }
 
+error_exit(){
+    if [ $1 -ne 0 ]; then
+        echo "${prog_name}: ${2:-"Unknown Error"}" 1>&2
+        exit 1
+    fi
+}
 
 ##############
 # Main Start #
