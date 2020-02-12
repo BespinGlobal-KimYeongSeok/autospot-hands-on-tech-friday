@@ -1,9 +1,13 @@
 #!/bin/bash
 
+####################################
+# Declare functions and variables ##
+####################################
 init_variables(){
-
-     default_vpc_id=""
-
+    default_region_code=(`eval "aws configure get region"`)
+    default_vpc_id=""
+    subnet_choices=()
+    default_alb_name="default-application-loadbalancer"
 }
 
 
@@ -21,7 +25,7 @@ get_default_vpc_from_region () {
 }
 
 multi_select_from_array(){
-    subnet_choices=()
+    
     echo "options: $subnets_arr"
     menu() {
         echo "Avaliable options:"
@@ -52,8 +56,6 @@ multi_select_from_array(){
 
 select_subnets_or_input(){
     subnets_arr=( $(aws ec2 describe-subnets --filters Name=vpc-id,Values=vpc-3c450346 | jq -r '.Subnets[].SubnetId') )
-    # vared -p "공백으로 구분된 서브넷 아이디 리스트를 입력해 주세요. ex) subnet-f830dcf6 subnet-33ba8b1d: " -c SUBNET_LIST
-    
     multi_select_from_array 
     for subnet in ${subnet_choices[@]};
     do 
@@ -63,35 +65,47 @@ select_subnets_or_input(){
 }
 
 get_default_region_or_input(){
-    REGION_CODE=(`eval "aws configure get region"`)
-    vared -p $'\n리전코드를 입력해 주세요.\n그냥 Enter 시 AWS Configure에 설정된 값으로 진행합니다: ' -c REGION_CODE
-    echo $REGION_CODE
+    
+    read -rp '리전코드를 입력해 주세요.그냥 Enter 시 AWS Configure에 설정된 값으로 진행합니다: ' region_code
+    if [ -z "$region_code" ]; then
+        region_code=${region_code:-$default_region_code}
+        echo "디폴트 리전: $region_code"
+    fi
 }
 
 get_default_albname_or_input(){
-
-    ALB_NAME="TestALB"
-    vared -p "ALB 이름을 입력해 주세요.: " -c ALB_NAME
-    echo $ALB_NAME
+    read -rp "ALB 이름을 입력해 주세요.: " alb_name
+    echo $alb_name
+    if [ -z "$alb_name" ]; then
+        alb_name=${alb_name:-$default_alb_name}
+        echo "디폴트 이름을 사용합니다: $alb_name"
+    fi
 }
-
-
 
 
 select_security_groups_or_input(){
 
-    SG="sg-0c2e83738a5a18b1b"
-    vared -p "보안그룹 아이디를 입력해주세요 : " -c SG
-    echo $SG
+    default_security_group=$(aws ec2 describe-security-groups --group-names default --filters Name=vpc-id,Values=vpc-3c450346 | jq -r '.SecurityGroups[].GroupId')
+    echo "디폴트 Security Group을 사용합니다: $default_security_group"
+    
 }
-
-
 
 
 
 create_application_load_balancer(){
 
-    SCRIPT="aws elbv2 create-load-balancer --name $ALB_NAME --subnets $SUBNET_LIST --security-groups $SG --region $REGION_CODE | jq -r '.LoadBalancers[].LoadBalancerArn'"
+    #1
+    get_default_albname_or_input
+
+    #2
+    select_subnets_or_input
+
+    #3
+    select_security_groups_or_input
+
+    echo $region_code
+    echo ${subnet_choices[@]}
+    SCRIPT="aws elbv2 create-load-balancer --name $alb_name --subnets ${subnet_choices[@]} --security-groups $default_security_group --region $region_code | jq -r '.LoadBalancers[].LoadBalancerArn'"
 
     clb_response=$(eval $SCRIPT)
     echo "response>>$clb_response"
@@ -131,15 +145,19 @@ create_listener_with_alb_targetgroup(){
 }
 
 
-######
-#Main#
-######
+##############
+# Main Start #
+##############
 
 #Variable Init
 init_variables
 
-#Get Default VPC 
+
+#1
+get_default_region_or_input
+
+#2
 get_default_vpc_from_region
 
-#get subnets from default vpc
-select_subnets_or_input
+#3
+create_application_load_balancer
