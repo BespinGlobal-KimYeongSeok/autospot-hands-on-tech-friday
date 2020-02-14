@@ -19,7 +19,7 @@ declare_amazon_linux_ami_hash(){
     alami_arr[apsoutheast2]="ami-0c91f97cadcc8499e"
     alami_arr[apnortheast1]="ami-079e6fb1e856e80c1"
     alami_arr[cacentral1]=" ami-003a0ba7ea76b2785"
-    alami_arr[eucentral1]="ami-0ab838eeee7f316eb"
+    alami_arr[eucentral1]="ami-0ba441bdd9e494102"
     alami_arr[euwest1]="ami-071f4ce599deff521"
     alami_arr[euwest2]="ami-0e49551fc78560451"
     alami_arr[euwest3]="ami-0ec1d48c59dda554a"
@@ -45,7 +45,7 @@ get_azs_array(){
     if [ $? -ne 0 ]; then
         error_exit $fetch_default_azs_error
     else
-        availability_zones_arr=$azs_arr
+        availability_zones_arr=( ${azs_arr[@]} )
     fi
 }
 
@@ -57,8 +57,6 @@ init_variables(){
     default_region_arr=()
     default_region_code=$(aws configure get region)
     region_code=$default_region_code
-    region_code_key=${default_region_code//[-]/''}
-    default_ami=${alami_arr["$region_code_key"]}
     default_vpc_id=""
     default_alb_name="default-application-loadbalancer"
     default_target_group_name="default-target-group"
@@ -73,6 +71,7 @@ init_variables(){
     ##동적 초기화
     get_region_array
     availability_zones_arr=()
+    get_azs_array
     availability_zones_choices=()
 }
 
@@ -185,6 +184,8 @@ get_default_region_or_input(){
         ;; 
         esac
     done
+    region_code_key=${region_code//[-]/''}
+    default_ami=${alami_arr["$region_code_key"]}
     echo "-------------------------------------------------------------------------------------"
 }
 
@@ -267,13 +268,10 @@ create_a_new_key_pair(){
     aws ec2 create-key-pair --key-name $key_name --region $region_code | jq -r ".KeyMaterial" > ~/.ssh/${key_name}.pem
     echo "~/.ssh/ 디렉토리에 키페어가 저장되었습니다"
     ls -al ~/.ssh/${key_name}.pem
-    local response_flag=$(aws ec2 wait key-pair-exists --key-names $key_name --region $region_code)
-    echo $response_flag
-    while [ $response_flag -ne 0 ]
-    do 
-        echo "waiting for key pair existence is verified on aws side"
-    done
-    echo $response_flag
+    sleep 5
+    echo "-------------------------------------------------------------------------------------"
+    aws ec2 wait key-pair-exists --key-names $key_name --region $region_code
+    echo $?
     echo "-------------------------------------------------------------------------------------"
 }
 
@@ -296,7 +294,7 @@ select_keypair_if_exits_or_create(){
 
 create_launch_configuration(){
     echo "-------------------------------------------------------------------------------------"
-    read -p "생성할 Launch Configuration 이름을 입력하세요 : " launch_configuration_name
+    read -p "생성할 Launch Configuration 이름을 입력하세요(미입력시 기본값은 ${default_launch_configuration_name}입니다) : " launch_configuration_name
     launch_configuration_name=${launch_configuration_name:-$default_launch_configuration_name}
 
     echo "Launch Configuration 에 사용할 Key Pair 를 선택하세요."
@@ -310,7 +308,8 @@ create_launch_configuration(){
   --launch-configuration-name $launch_configuration_name \
   --image-id $default_ami \
   --key-name $key_name \
-  --instance-type t1.micro --user-data file://instance-setup.sh 
+  --instance-type m4.large --user-data file://instance-setup.sh \
+  --region $region_code
   echo "-------------------------------------------------------------------------------------"
 }
 
@@ -332,6 +331,7 @@ create_auto_scaling_group(){
   --max-size 1 \
   --desired-capacity 1 \
   --availability-zones ${availability_zones_choices[@]}
+  --region $region_code
 
 }
 
