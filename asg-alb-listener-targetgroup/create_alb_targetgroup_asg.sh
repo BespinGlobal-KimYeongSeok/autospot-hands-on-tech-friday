@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/local/bin/bash
 
 ####################################
 # Declare functions and variables ##
@@ -7,40 +7,41 @@
 
 declare_amazon_linux_ami_hash(){
 
-    declare -a alami_arr
-    alami_arr['us_east_1']="ami-09d069a04349dc3cb"
-    alami_arr["us_east_2"]="ami-0d542ef84ec55d71c"
-    alami_arr["us_west_1"]="ami-04bc3da8f14823e88"
-    alami_arr["us_west_2"]="ami-01460aa81365561fe"
+    declare -A -g alami_arr
+    alami_arr[useast1]="ami-09d069a04349dc3cb"
+    alami_arr[useast2]="ami-0d542ef84ec55d71c"
+    alami_arr[uswest1]="ami-04bc3da8f14823e88"
+    alami_arr[uswest2]="ami-01460aa81365561fe"
     # alami_arr["ap-east-1"]="ami-04bc3da8f14823e88" HongKong being prepared
-    alami_arr["ap_south_1"]="ami-09d069a04349dc3cb"
-    alami_arr["ap_northeast_2"]="ami-0e4a253fb5f082688"
-    alami_arr["ap_southeast_1"]="ami-0d9233e8ce73df7b2"
-    alami_arr["ap_southeast_2"]="ami-0c91f97cadcc8499e"
-    alami_arr["ap_northeast_1"]="ami-079e6fb1e856e80c1"
-    alami_arr["ca_central_1"]=" ami-003a0ba7ea76b2785"
-    alami_arr["eu_central_1"]="ami-0ab838eeee7f316eb"
-    alami_arr["eu_west_1"]="ami-071f4ce599deff521"
-    alami_arr["eu_west_2"]="ami-0e49551fc78560451"
-    alami_arr["eu_west_3"]="ami-0ec1d48c59dda554a"
-    alami_arr["eu_north_1"]="ami-0f1d8c8ad70ce9c62"
+    alami_arr[apsouth1]="ami-09d069a04349dc3cb"
+    alami_arr[apnortheast2]="ami-0e4a253fb5f082688"
+    alami_arr[ap_southeast1]="ami-0d9233e8ce73df7b2"
+    alami_arr[ap_southeast2]="ami-0c91f97cadcc8499e"
+    alami_arr[ap_northeast1]="ami-079e6fb1e856e80c1"
+    alami_arr[ca_central1]=" ami-003a0ba7ea76b2785"
+    alami_arr[eu_central1]="ami-0ab838eeee7f316eb"
+    alami_arr[eu_west_1"]="ami-071f4ce599deff521"
+    alami_arr[eu_west_2"]="ami-0e49551fc78560451"
+    alami_arr[eu_west_3"]="ami-0ec1d48c59dda554a"
+    alami_arr[eu_north_1"]="ami-0f1d8c8ad70ce9c62"
     # alami_arr["me-south-1"]="ami-09d069a04349dc3cb" Bahrain being prepared
-    alami_arr["sa_east_1"]="ami-0b7a1f602d34f142f" 
+    alami_arr[saeast1]="ami-0b7a1f602d34f142f" 
 
 }
 init_variables(){
     declare_amazon_linux_ami_hash
     prog_name=$(basename $0)
     default_region_code=$(aws configure get region)
-    region_code_hyphen=${default_region_code//[-]/_}
+    region_code_key=${default_region_code//[-]/''}
     default_vpc_id=""
     subnet_choices=()
     default_alb_name="default-application-loadbalancer"
     default_target_group_name="default-target-group"
     target_group_arn=""
-
     default_key_name="default-key-pair"
-    default_ami=$alami_arr[$region_code_hyphen]
+    echo "region_code_key: $region_code_key"
+    default_ami=${alami_arr["$region_code_key"]}
+    echo "default_ami: $default_ami"
     default_auto_scaling_group_name="default-autoscaling-group"
     default_launch_configuration_name="default-launch-configuration"
     availability_zones_arr=( $(aws ec2 describe-availability-zones --filters Name=state,Values=available | jq -r '.AvailabilityZones[].ZoneName') )
@@ -96,12 +97,12 @@ multi_select_subnets_from_array(){
 }
 
 multi_select_azs_from_array(){
-    
+    choice_indexs
     echo "options: $availability_zones_arr"
     menu() {
         echo "Avaliable options:"
         for i in ${!availability_zones_arr[@]}; do
-            printf "%3d%s) %s\n" $((i+1)) "${choices[i]:- }" "${availability_zones_arr[i]}"
+            printf "%3d%s) %s\n" $((i+1)) "${choice_indexs[i]:- }" "${availability_zones_arr[i]}"
         done
         [[ "$msg" ]] && echo "$msg"; :
     }
@@ -111,14 +112,14 @@ multi_select_azs_from_array(){
         [[ "$num" != *[![:digit:]]* ]] &&
         (( num > 0 && num <= ${#availability_zones_arr[@]} )) ||
         { msg="Invalid option: $num"; continue; }
-        ((num--)); msg="${availability_zones_arr[num]} was ${choices[num]:+un}checked"
+        ((num--)); msg="${availability_zones_arr[num]} was ${choice_indexs[num]:+un}checked"
         availability_zones_choices[num]=${availability_zones_arr[num]}
-        [[ "${choices[num]}" ]] && choices[num]="" || choices[num]="+"
+        [[ "${choice_indexs[num]}" ]] && choice_indexs[num]="" || choice_indexs[num]="+"
     done
     
     printf "You selected"; msg=" nothing"
     for i in ${!availability_zones_arr[@]}; do
-        [[ "${choices[i]}" ]] && { printf " %s" "${availability_zones_arr[i]}"; msg=""; }
+        [[ "${choice_indexs[i]}" ]] && { printf " %s" "${availability_zones_arr[i]}"; msg=""; }
     done
     echo "$msg"
     echo $availability_zones_choices
@@ -261,6 +262,9 @@ create_auto_scaling_group(){
 
     #1
     create_launch_configuration
+
+    #2
+    multi_select_azs_from_array
 
     read -p "생성할 AutoScalingGroup 이름을 입력하세요 : " auto_scaling_group_name
     auto_scaling_group_name=${auto_scaling_group_name:-$default_auto_scaling_group_name}
