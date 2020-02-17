@@ -143,6 +143,24 @@ ___
  <details>
  <summary>Step 2. Spot Analyzer 로 Discover & Clone </summary>
 
+  
+  * Additional Service > Spot Analyzer 들어가기
+    * ![spot_analyzer_menu](https://user-images.githubusercontent.com/60588746/74618357-b56b8480-5174-11ea-81b2-4e43dd83742c.png)
+  
+  * Rediscover Resources 로 생성한 자원 발견하기
+    * ![rediscover](https://user-images.githubusercontent.com/60588746/74618691-2c554d00-5176-11ea-890d-b988cd02bfb2.png)
+
+  * 발견된 AutoScalingGroup 클론하기
+    * ![clone_asg](https://user-images.githubusercontent.com/60588746/74618453-33c82680-5175-11ea-97aa-36f772624eca.png)
+
+  * 리전과 이름 확인 후 Next 버튼 클릭
+    * ![next_clone_asg](https://user-images.githubusercontent.com/60588746/74618569-c9fc4c80-5175-11ea-94ae-30cea67aab7b.png)
+
+  * Elastigroup 요약정보 확인
+    * ![summary](https://user-images.githubusercontent.com/60588746/74618572-cc5ea680-5175-11ea-87fd-624e648c1e10.png)
+
+  * Elastigroup 생성 성공 확인
+    * ![create_success](https://user-images.githubusercontent.com/60588746/74618575-cec10080-5175-11ea-81fc-5690d56e04b3.png)
 
 </details> 
 </h3>
@@ -151,6 +169,8 @@ ___
  <details>
  <summary>Step 3. Elastigroup 확인  </summary>
 
+  * Elastigroup 상세정보확인
+    * ![elastigroup_created](https://user-images.githubusercontent.com/60588746/74618630-fca64500-5175-11ea-998a-672047c9b4d8.png)
 
 </details> 
 </h3>
