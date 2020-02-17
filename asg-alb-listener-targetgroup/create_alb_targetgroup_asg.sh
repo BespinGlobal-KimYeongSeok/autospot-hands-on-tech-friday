@@ -8,24 +8,24 @@
 declare_amazon_linux_ami_hash(){
     
     declare -A -g alami_arr
-    alami_arr[useast1]="ami-09d069a04349dc3cb"
-    alami_arr[useast2]="ami-0d542ef84ec55d71c"
-    alami_arr[uswest1]="ami-04bc3da8f14823e88"
+    alami_arr[useast1]="ami-0a887e401f7654935"
+    alami_arr[useast2]="ami-0e38b48473ea57778"
+    alami_arr[uswest1]="ami-01c94064639c71719"
     alami_arr[uswest2]="ami-0e8c04af2729ff1bb"
-    alami_arr[apeast1]="ami-7ab4f00b" 
-    alami_arr[apsouth1]="ami-09d069a04349dc3cb"
-    alami_arr[apnortheast2]="ami-0e4a253fb5f082688"
-    alami_arr[apsoutheast1]="ami-0d9233e8ce73df7b2"
-    alami_arr[apsoutheast2]="ami-0c91f97cadcc8499e"
-    alami_arr[apnortheast1]="ami-079e6fb1e856e80c1"
-    alami_arr[cacentral1]=" ami-003a0ba7ea76b2785"
-    alami_arr[eucentral1]="ami-0ba441bdd9e494102"
-    alami_arr[euwest1]="ami-071f4ce599deff521"
-    alami_arr[euwest2]="ami-0e49551fc78560451"
-    alami_arr[euwest3]="ami-0ec1d48c59dda554a"
-    alami_arr[eunorth1]="ami-0f1d8c8ad70ce9c62"
-    alami_arr[mesouth1]="ami-0f9dd846ebb1d7a81" 
-    alami_arr[saeast1]="ami-0b7a1f602d34f142f" 
+    alami_arr[apeast1]="ami-47e4a036" 
+    alami_arr[apsouth1]="ami-0d9462a653c34dab7"
+    alami_arr[apnortheast2]="ami-0a93a08544874b3b7"
+    alami_arr[apsoutheast1]="ami-0f02b24005e4aec36"
+    alami_arr[apsoutheast2]="ami-0f767afb799f45102"
+    alami_arr[apnortheast1]="ami-0af1df87db7b650f4"
+    alami_arr[cacentral1]="ami-00db12b46ef5ebc36"
+    alami_arr[eucentral1]="ami-0df0e7600ad0913a9"
+    alami_arr[euwest1]="ami-099a8245f5daa82bf"
+    alami_arr[euwest2]="ami-0389b2a3c4948b1a0"
+    alami_arr[euwest3]="ami-0fd9bce3a3384b635"
+    alami_arr[eunorth1]="ami-074a0e4318181e9d9"
+    alami_arr[mesouth1]="ami-0e0e68bcf15b6f5cd" 
+    alami_arr[saeast1]="ami-080a223be3de0c3b8" 
 
 }
 
@@ -65,16 +65,19 @@ init_variables(){
     default_launch_configuration_name="default-launch-configuration"
     default_auto_scaling_group_name="default-autoscaling-group"
     prog_name=$(basename $0)
+    default_health_check_protocol="HTTP"
+    default_health_check_path="/phpinfo.php"
     
     
     subnet_choices=()
     target_group_arn=""
+    my_public_ip=""
 
     ##동적 초기화
     get_region_array
     availability_zones_arr=()
     availability_zones_choices=()
-    
+    get_public_ip
 }
 
 ## 에러코드 초기화
@@ -87,6 +90,11 @@ init_errorcodes(){
     create_target_group_error="대상그룹을 생성하는데 실패하였습니다."
 }
 
+## 공인아이피 가져오기
+get_public_ip(){
+    my_public_ip="$(dig +short myip.opendns.com @resolver1.opendns.com)"
+    my_public_ip="${my_public_ip}/32"
+}
 
 ## 해당 리전에 기본 VPC 값 가져오기
 get_default_vpc_from_region () {
@@ -134,6 +142,7 @@ multi_select_subnets_from_array(){
 
 multi_select_azs_from_array(){
     get_azs_array
+    echo "-------------------------------------------------------------------------------------"
     menu() {
         for i in ${!availability_zones_arr[@]}; do
             printf "%3d%s) %s\n" $((i+1)) "${choice_indexs[i]:- }" "${availability_zones_arr[i]}"
@@ -156,7 +165,7 @@ multi_select_azs_from_array(){
         [[ "${choice_indexs[i]}" ]] && { printf " %s" "${availability_zones_arr[i]}"; msg=""; }
     done
     echo "$msg"
-    echo $availability_zones_choices
+    echo "-------------------------------------------------------------------------------------"
 }
 
 select_subnets_or_input(){
@@ -243,7 +252,7 @@ create_target_group(){
     target_group_name=${target_group_name:-$default_target_group_name}
     echo "대상그룹이름: $target_group_name"
     
-    local script="aws elbv2 create-target-group --region $region_code --name $target_group_name --protocol HTTP --port 80 --vpc-id $default_vpc_id | jq -r '.TargetGroups[].TargetGroupArn'"
+    local script="aws elbv2 create-target-group --region $region_code --name $target_group_name --protocol HTTP --port 80 --vpc-id $default_vpc_id --health-check-protocol $default_health_check_protocol --health-check-path $default_health_check_path | jq -r '.TargetGroups[].TargetGroupArn'"
     target_group_arn=$(eval $script)    
     if [ $? -ne 0 ]; then
         error_exit $create_target_group_error
@@ -347,6 +356,12 @@ attach_loadblanacer_target_group(){
 
 }
 
+add_ingress_rule_to_security_group(){
+    aws ec2 update-security-group-rule-descriptions-ingress \
+    --group-id $default_security_group \
+    --ip-permissions '[{"IpProtocol": "http", "FromPort": 80, "ToPort": 80, "IpRanges": [{"CidrIp": "${my_public_ip}", "Description": "http access from hands-on office"}]}]'
+}
+
 
 error_exit(){
     echo "${prog_name}: ${1:-"Unknown Error"}" 1>&2
@@ -376,6 +391,9 @@ create_auto_scaling_group
 attach_loadblanacer_target_group
 
 #7
+add_ingress_rule_to_security_group
+
+#8
 if [ $? -eq 0 ]; then
     echo "Hands-on을 위한 실습자원 생성을 완료하였습니다."
 else 
