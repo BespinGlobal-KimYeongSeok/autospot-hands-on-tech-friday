@@ -105,7 +105,11 @@ ___
 
 
      * Auto Scaling Group을 Load Balancer 에 연결
-       * [공식가이드참조](https://docs.aws.amazon.com/ko_kr/autoscaling/ec2/userguide/attach-load-balancer-asg.html)
+       * [공식가이드참조](https://docs.aws.amazon.com/ko_kr/autoscaling/ec2/userguide/attach-load-balancer-asg.html) 
+          * <img width="1027" alt="asg_edit_button" src="https://user-images.githubusercontent.com/60588746/74623209-0f754580-5187-11ea-89d6-9570cc594f02.png">
+          
+          * <img width="625" alt="asg_edit_targetgroup" src="https://user-images.githubusercontent.com/60588746/74623212-113f0900-5187-11ea-8c9a-6268a58bcbf1.png">
+
 
     </details>
 
