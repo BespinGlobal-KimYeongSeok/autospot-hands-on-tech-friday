@@ -76,7 +76,7 @@ ___
      * Application Load Balancer 생성
        * [공식가이드참조](https://docs.aws.amazon.com/ko_kr/elasticloadbalancing/latest/application/create-application-load-balancer.html)
          * 로드 밸런서 메뉴
-          ![alb_menu](https://user-images.githubusercontent.com/60588746/74622365-ea330800-5183-11ea-8127-c3de71094853.png){: .shadow}
+          ![alb_menu](https://user-images.githubusercontent.com/60588746/74622365-ea330800-5183-11ea-8127-c3de71094853.png)
          * 로드 밸런스 생성 버튼
            ![alb_create_button](https://user-images.githubusercontent.com/60588746/74622396-f8812400-5183-11ea-97c0-1788c7481668.png)
          * 로드 밸런서 종류 선택
