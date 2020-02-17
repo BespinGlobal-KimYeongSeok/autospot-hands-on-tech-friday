@@ -11,7 +11,7 @@ declare_amazon_linux_ami_hash(){
     alami_arr[useast1]="ami-09d069a04349dc3cb"
     alami_arr[useast2]="ami-0d542ef84ec55d71c"
     alami_arr[uswest1]="ami-04bc3da8f14823e88"
-    alami_arr[uswest2]="ami-01460aa81365561fe"
+    alami_arr[uswest2]="ami-0e8c04af2729ff1bb"
     alami_arr[apeast1]="ami-7ab4f00b" 
     alami_arr[apsouth1]="ami-09d069a04349dc3cb"
     alami_arr[apnortheast2]="ami-0e4a253fb5f082688"
@@ -41,7 +41,7 @@ get_region_array(){
 
 ## 가용영역 정보 가져오기
 get_azs_array(){
-    local azs_arr=( $(aws ec2 describe-availability-zones --filters Name=state,Values=available | jq -r '.AvailabilityZones[].ZoneName') )
+    local azs_arr=( $(aws ec2 describe-availability-zones --region $region_code --filters Name=state,Values=available | jq -r '.AvailabilityZones[].ZoneName') )
     if [ $? -ne 0 ]; then
         error_exit $fetch_default_azs_error
     else
@@ -61,9 +61,11 @@ init_variables(){
     default_alb_name="default-application-loadbalancer"
     default_target_group_name="default-target-group"
     default_key_name="default-key-pair"
+    created_key_name=""
     default_launch_configuration_name="default-launch-configuration"
     default_auto_scaling_group_name="default-autoscaling-group"
     prog_name=$(basename $0)
+    
     
     subnet_choices=()
     target_group_arn=""
@@ -71,8 +73,8 @@ init_variables(){
     ##동적 초기화
     get_region_array
     availability_zones_arr=()
-    get_azs_array
     availability_zones_choices=()
+    
 }
 
 ## 에러코드 초기화
@@ -131,16 +133,15 @@ multi_select_subnets_from_array(){
 }
 
 multi_select_azs_from_array(){
-    echo "options: $availability_zones_arr"
+    get_azs_array
     menu() {
-        echo "Avaliable options:"
         for i in ${!availability_zones_arr[@]}; do
             printf "%3d%s) %s\n" $((i+1)) "${choice_indexs[i]:- }" "${availability_zones_arr[i]}"
         done
         [[ "$msg" ]] && echo "$msg"; :
     }
     
-    prompt="Check an option (again to uncheck, ENTER when done): "
+    prompt="오토스케일링그룹에 사용할 가용존의 번호를 입력해주세요 (두번 선택시 미선택됩니다, ENTER 를 누르면 종료됩니다): "
     while menu && read -rp "$prompt" num && [[ "$num" ]]; do
         [[ "$num" != *[![:digit:]]* ]] &&
         (( num > 0 && num <= ${#availability_zones_arr[@]} )) ||
@@ -150,7 +151,7 @@ multi_select_azs_from_array(){
         [[ "${choice_indexs[num]}" ]] && choice_indexs[num]="" || choice_indexs[num]="+"
     done
     
-    printf "You selected"; msg=" nothing"
+    printf "선택하신 항목은"; msg=" 없습니다."
     for i in ${!availability_zones_arr[@]}; do
         [[ "${choice_indexs[i]}" ]] && { printf " %s" "${availability_zones_arr[i]}"; msg=""; }
     done
@@ -272,6 +273,7 @@ create_a_new_key_pair(){
     echo "-------------------------------------------------------------------------------------"
     aws ec2 wait key-pair-exists --key-names $key_name --region $region_code
     echo $?
+    created_key_name=$key_name
     echo "-------------------------------------------------------------------------------------"
 }
 
@@ -286,7 +288,7 @@ select_keypair_if_exits_or_create(){
     else
         select key_name in ${keypair_array[@]}
         do
-        echo "You have chosen to use $key_name"
+        echo "${key_name}를 키페어로 선택하였습니다."
         break
         done
     fi
@@ -300,9 +302,6 @@ create_launch_configuration(){
     echo "Launch Configuration 에 사용할 Key Pair 를 선택하세요."
     #키페어 확인 후 선택 혹은 생성
     select_keypair_if_exits_or_create
-
-    
-    echo "AMI Check: $default_ami"
 
     aws autoscaling create-launch-configuration \
   --launch-configuration-name $launch_configuration_name \
@@ -321,7 +320,7 @@ create_auto_scaling_group(){
     #2
     multi_select_azs_from_array
 
-    read -p "생성할 AutoScalingGroup 이름을 입력하세요 : " auto_scaling_group_name
+    read -p "생성할 AutoScalingGroup 이름을 입력하세요 (미입력시 기본값은 ${default_auto_scaling_group_name}입니다) : " auto_scaling_group_name
     auto_scaling_group_name=${auto_scaling_group_name:-$default_auto_scaling_group_name}
 
     aws autoscaling create-auto-scaling-group \
@@ -330,7 +329,7 @@ create_auto_scaling_group(){
   --min-size 1 \
   --max-size 1 \
   --desired-capacity 1 \
-  --availability-zones ${availability_zones_choices[@]}
+  --availability-zones ${availability_zones_choices[@]} \
   --region $region_code
 
 }
@@ -339,9 +338,10 @@ attach_loadblanacer_target_group(){
 
     aws autoscaling attach-load-balancer-target-groups \
     --auto-scaling-group-name $auto_scaling_group_name \
-    --target-group-arns $target_group_arn
+    --target-group-arns $target_group_arn \
+    --region $region_code
 
-    if [ $? -ne 0]; then
+    if [ $? -ne 0 ]; then
         error_exit $attach_lb_tg_error
     fi
 
@@ -350,15 +350,6 @@ attach_loadblanacer_target_group(){
 
 error_exit(){
     echo "${prog_name}: ${1:-"Unknown Error"}" 1>&2
-    if [ $alb_arn !="" ]; then
-        echo "Deleteing ALB"
-        aws elbv2 delete-load-balancer --load-balancer-arn $alb_arn
-    fi
-    if [ $target_group_arn !="" ]; then
-        echo "Deleteing Target Group"
-        aws elbv2 delete-target-group --target-group-arn $target_group_arn
-    fi
-    exit 1
 }
 
 ##############
@@ -371,6 +362,7 @@ init_variables
 #2
 get_default_region_or_input
 
+
 #3
 get_default_vpc_from_region
 
@@ -379,3 +371,29 @@ create_application_load_balancer
 
 #5
 create_auto_scaling_group
+
+#6
+attach_loadblanacer_target_group
+
+#7
+if [ $? -eq 0 ]; then
+    echo "Hands-on을 위한 실습자원 생성을 완료하였습니다."
+else 
+    echo "Hands-on을 위한 실습자원 생성을 실패하였습니다."
+    echo "생성한 자원을 삭제합니다."
+    #1 로드 발란서 삭제
+    aws elbv2 delete-load-balancer --region $region_code --load-balancer-arn $alb_arn
+
+    #2 타켓그룹 삭제
+    aws elbv2 delete-target-group --region $region_code --target-group-arn $target_group_arn
+
+    #3 오토스케일링 그룹 삭제
+    aws autoscaling delete-auto-scaling-group --region $region_code --auto-scaling-group-name $auto_scaling_group_name
+    
+    #4 오토스케일링 그룹 설정 삭제
+    aws autoscaling delete-launch-configuration --region $region_code --launch-configuration-name $launch_configuration_name
+
+    #5 키페어삭제
+    aws ec2 delete-key-pair --region $region_code --key-name $created_key_name
+
+fi
