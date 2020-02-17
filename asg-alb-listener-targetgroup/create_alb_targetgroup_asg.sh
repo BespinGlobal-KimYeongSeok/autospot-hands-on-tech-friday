@@ -65,7 +65,6 @@ init_variables(){
     default_launch_configuration_name="default-launch-configuration"
     default_auto_scaling_group_name="default-autoscaling-group"
     prog_name=$(basename $0)
-    default_health_check_protocol="HTTP"
     default_health_check_path="/phpinfo.php"
     
     
@@ -138,6 +137,7 @@ multi_select_subnets_from_array(){
         [[ "${choices[i]}" ]] && { printf " %s" "${subnets_arr[i]}"; msg=""; }
     done
     echo "$msg"
+    echo "-------------------------------------------------------------------------------------"
 }
 
 multi_select_azs_from_array(){
@@ -171,10 +171,6 @@ multi_select_azs_from_array(){
 select_subnets_or_input(){
     subnets_arr=( $(aws ec2 describe-subnets --region $region_code --filters Name=vpc-id,Values=${default_vpc_id} | jq -r '.Subnets[].SubnetId') )
     multi_select_subnets_from_array 
-    for subnet in ${subnet_choices[@]};
-    do 
-        echo $subnet 
-    done
     
 }
 
@@ -210,8 +206,10 @@ get_default_albname_or_input(){
 
 select_security_groups_or_input(){
 
-    default_security_group=$(aws ec2 describe-security-groups --region $region_code --group-names default --filters Name=vpc-id,Values=vpc-3c450346 | jq -r '.SecurityGroups[].GroupId')
+    echo "-------------------------------------------------------------------------------------"
+    default_security_group=$(aws ec2 describe-security-groups --region $region_code --group-names default --filters Name=vpc-id,Values=$default_vpc_id | jq -r '.SecurityGroups[].GroupId')
     echo "기본 Security Group을 사용합니다 : $default_security_group"
+    echo "-------------------------------------------------------------------------------------"
     
 }
 
@@ -252,7 +250,7 @@ create_target_group(){
     target_group_name=${target_group_name:-$default_target_group_name}
     echo "대상그룹이름: $target_group_name"
     
-    local script="aws elbv2 create-target-group --region $region_code --name $target_group_name --protocol HTTP --port 80 --vpc-id $default_vpc_id --health-check-protocol $default_health_check_protocol --health-check-path $default_health_check_path | jq -r '.TargetGroups[].TargetGroupArn'"
+    local script="aws elbv2 create-target-group --region $region_code --name $target_group_name --protocol HTTP --port 80 --vpc-id $default_vpc_id --health-check-path $default_health_check_path | jq -r '.TargetGroups[].TargetGroupArn'"
     target_group_arn=$(eval $script)    
     if [ $? -ne 0 ]; then
         error_exit $create_target_group_error
@@ -281,7 +279,6 @@ create_a_new_key_pair(){
     sleep 5
     echo "-------------------------------------------------------------------------------------"
     aws ec2 wait key-pair-exists --key-names $key_name --region $region_code
-    echo $?
     created_key_name=$key_name
     echo "-------------------------------------------------------------------------------------"
 }
@@ -316,7 +313,7 @@ create_launch_configuration(){
   --launch-configuration-name $launch_configuration_name \
   --image-id $default_ami \
   --key-name $key_name \
-  --instance-type m4.large --user-data file://instance-setup.sh \
+  --instance-type t2.medium --user-data file://instance-setup.sh \
   --region $region_code
   echo "-------------------------------------------------------------------------------------"
 }
@@ -344,7 +341,7 @@ create_auto_scaling_group(){
 }
 
 attach_loadblanacer_target_group(){
-
+    echo "로드발란서의 대상그룹에 오토스케일링 그룹을 연결합니다..."
     aws autoscaling attach-load-balancer-target-groups \
     --auto-scaling-group-name $auto_scaling_group_name \
     --target-group-arns $target_group_arn \
@@ -355,13 +352,6 @@ attach_loadblanacer_target_group(){
     fi
 
 }
-
-add_ingress_rule_to_security_group(){
-    aws ec2 update-security-group-rule-descriptions-ingress \
-    --group-id $default_security_group \
-    --ip-permissions '[{"IpProtocol": "http", "FromPort": 80, "ToPort": 80, "IpRanges": [{"CidrIp": "${my_public_ip}", "Description": "http access from hands-on office"}]}]'
-}
-
 
 error_exit(){
     echo "${prog_name}: ${1:-"Unknown Error"}" 1>&2
@@ -390,10 +380,8 @@ create_auto_scaling_group
 #6
 attach_loadblanacer_target_group
 
-#7
-add_ingress_rule_to_security_group
 
-#8
+#7
 if [ $? -eq 0 ]; then
     echo "Hands-on을 위한 실습자원 생성을 완료하였습니다."
 else 
@@ -401,17 +389,22 @@ else
     echo "생성한 자원을 삭제합니다."
     #1 로드 발란서 삭제
     aws elbv2 delete-load-balancer --region $region_code --load-balancer-arn $alb_arn
+    sleep 7
 
     #2 타켓그룹 삭제
     aws elbv2 delete-target-group --region $region_code --target-group-arn $target_group_arn
+    sleep 7
 
     #3 오토스케일링 그룹 삭제
     aws autoscaling delete-auto-scaling-group --region $region_code --auto-scaling-group-name $auto_scaling_group_name
-    
+    sleep 7
+
     #4 오토스케일링 그룹 설정 삭제
     aws autoscaling delete-launch-configuration --region $region_code --launch-configuration-name $launch_configuration_name
+    sleep 7
 
     #5 키페어삭제
     aws ec2 delete-key-pair --region $region_code --key-name $created_key_name
-
+    sleep 7
+    echo "프로세스 중단으로 기존 생성 자원을 삭제완료하였습니다."
 fi
