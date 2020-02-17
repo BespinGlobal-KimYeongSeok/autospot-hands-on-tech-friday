@@ -77,62 +77,78 @@ ___
        * [공식가이드참조](https://docs.aws.amazon.com/ko_kr/elasticloadbalancing/latest/application/create-application-load-balancer.html)
          * 로드 밸런서 메뉴  
           ![alb_menu](https://user-images.githubusercontent.com/60588746/74622365-ea330800-5183-11ea-8127-c3de71094853.png)
+          * * *
          * 로드 밸런스 생성 버튼
            ![alb_create_button](https://user-images.githubusercontent.com/60588746/74622396-f8812400-5183-11ea-97c0-1788c7481668.png)
+           * * *
          * 로드 밸런서 종류 선택
            ![alb_type_selection](https://user-images.githubusercontent.com/60588746/74622408-08006d00-5184-11ea-822d-60d8ee907a2f.png)
+           * * *
          * 로드밸런서 세부 구성
            ![alb_name_listener_az](https://user-images.githubusercontent.com/60588746/74622416-151d5c00-5184-11ea-9882-4f299ca66363.png)
+           * * *
          * 보안구성 생략
            ![alb_creation_ssl](https://user-images.githubusercontent.com/60588746/74622455-31b99400-5184-11ea-9c9f-a1565523f7db.png)
+           * * *
          * 기본 보안 그룹 설정
            ![alb_creation_security_group_default](https://user-images.githubusercontent.com/60588746/74622464-3aaa6580-5184-11ea-86a5-425780dd23ff.png)
+           * * *
          * 로드밸런서 라우팅 설정
            ![alb_creation_routing](https://user-images.githubusercontent.com/60588746/74622476-439b3700-5184-11ea-85ea-565dafb16927.png)
+           * * *
          * 대상그룹설정은 비워놓기
            ![alb_creation_targetgroup_empty](https://user-images.githubusercontent.com/60588746/74622480-4ac24500-5184-11ea-8ea7-5b3215e8638a.png)
+           * * *
          * 검토
            ![alb_creation_review](https://user-images.githubusercontent.com/60588746/74622489-57df3400-5184-11ea-9d5a-114e9207d6cf.png)
-
+          * * *
      * Auto Scaling Group 시작구성 생성
        * [공식가이드참조](https://docs.aws.amazon.com/ko_kr/autoscaling/ec2/userguide/create-asg-ec2-wizard.html)
          * 시작구성 생성 메뉴
            ![asg_config_create_menu](https://user-images.githubusercontent.com/60588746/74622514-79402000-5184-11ea-8684-6a063aaa7600.png)
+           * * *
          * 시작구성 인트턴스 AMI 는 Amazon Linux 2 선택
            ![asg_config_ami_amazonlinux2](https://user-images.githubusercontent.com/60588746/74622548-9e349300-5184-11ea-9c61-65dd1da096a7.png)
+           * * *
          * 시작구성 인트턴스 타입 선택
            ![asg_config_instancetype](https://user-images.githubusercontent.com/60588746/74622668-04b9b100-5185-11ea-96f7-9ed7228de953.png)
+           * * *
          * 시작구성 이름 설정
            ![asg_config_name](https://user-images.githubusercontent.com/60588746/74622697-29158d80-5185-11ea-8fc1-a2158a04df3c.png)
+           * * *
          * 시작구성 스토리지 구성
            ![asg_config_storage](https://user-images.githubusercontent.com/60588746/74622712-39c60380-5185-11ea-9f86-9e998bc11c46.png)
+           * * *
          * 시작구성 보안그룹 구성
            ![asg_config_default_security_group](https://user-images.githubusercontent.com/60588746/74622747-56623b80-5185-11ea-8c5b-15f7e3509659.png)
+           * * *
          * 시작구성 검토
            ![asg_config_review](https://user-images.githubusercontent.com/60588746/74622760-5feba380-5185-11ea-8632-e48ed3ebd80c.png)
-
+          * * *
 
       * Auto Scaling Group 생성
         * 상세구성
           ![asg_details](https://user-images.githubusercontent.com/60588746/74622835-9d503100-5185-11ea-8317-f31b2e12cb24.png)
+          * * *
         * 시작구성 오토스케일링 그대로 유지
           ![asg_scaling_policy](https://user-images.githubusercontent.com/60588746/74622841-a04b2180-5185-11ea-8a5a-c5e5fbea0f21.png)
+          * * *
         * 오토스케일링 생성 검토
           ![asg_creation_review](https://user-images.githubusercontent.com/60588746/74622844-a3461200-5185-11ea-8e12-8505f30217c9.png)
+          * * *
         * 생성 성공 확인
           ![asg_creation_success](https://user-images.githubusercontent.com/60588746/74622852-a5a86c00-5185-11ea-8520-f93a637ac7b7.png)
-
+          * * *
 
 
      * Auto Scaling Group을 Load Balancer 에 연결
        * [공식가이드참조](https://docs.aws.amazon.com/ko_kr/autoscaling/ec2/userguide/attach-load-balancer-asg.html) 
           * AutoScalingGroup 편집  
             <img width="1027" alt="asg_edit_button" src="https://user-images.githubusercontent.com/60588746/74623209-0f754580-5187-11ea-89d6-9570cc594f02.png">
-          
+          * * *
           * 대상그룹 추가  
             <img width="625" alt="asg_edit_targetgroup" src="https://user-images.githubusercontent.com/60588746/74623212-113f0900-5187-11ea-8c9a-6268a58bcbf1.png">
-
-
+          * * *
     </details>
 
 * <details>
@@ -198,23 +214,23 @@ ___
 
   
   * Additional Service > Spot Analyzer 들어가기
-    * ![spot_analyzer_menu](https://user-images.githubusercontent.com/60588746/74618357-b56b8480-5174-11ea-81b2-4e43dd83742c.png)
-  
+    ![spot_analyzer_menu](https://user-images.githubusercontent.com/60588746/74618357-b56b8480-5174-11ea-81b2-4e43dd83742c.png)
+* * *
   * Rediscover Resources 로 생성한 자원 발견하기
-    * ![rediscover](https://user-images.githubusercontent.com/60588746/74618691-2c554d00-5176-11ea-890d-b988cd02bfb2.png)
-
+    ![rediscover](https://user-images.githubusercontent.com/60588746/74618691-2c554d00-5176-11ea-890d-b988cd02bfb2.png)
+* * *
   * 발견된 AutoScalingGroup 클론하기
-    * ![clone_asg](https://user-images.githubusercontent.com/60588746/74618453-33c82680-5175-11ea-97aa-36f772624eca.png)
-
+    ![clone_asg](https://user-images.githubusercontent.com/60588746/74618453-33c82680-5175-11ea-97aa-36f772624eca.png)
+* * *
   * 리전과 이름 확인 후 Next 버튼 클릭
-    * ![next_clone_asg](https://user-images.githubusercontent.com/60588746/74618569-c9fc4c80-5175-11ea-94ae-30cea67aab7b.png)
-
+    ![next_clone_asg](https://user-images.githubusercontent.com/60588746/74618569-c9fc4c80-5175-11ea-94ae-30cea67aab7b.png)
+* * *
   * Elastigroup 요약정보 확인
-    * ![summary](https://user-images.githubusercontent.com/60588746/74618572-cc5ea680-5175-11ea-87fd-624e648c1e10.png)
-
+    ![summary](https://user-images.githubusercontent.com/60588746/74618572-cc5ea680-5175-11ea-87fd-624e648c1e10.png)
+* * *
   * Elastigroup 생성 성공 확인
-    * ![create_success](https://user-images.githubusercontent.com/60588746/74618575-cec10080-5175-11ea-81fc-5690d56e04b3.png)
-
+    ![create_success](https://user-images.githubusercontent.com/60588746/74618575-cec10080-5175-11ea-81fc-5690d56e04b3.png)
+* * *
 </details> 
 </h3>
 
@@ -223,7 +239,7 @@ ___
  <summary>Step 3. Elastigroup 확인  </summary>
 
   * Elastigroup 상세정보확인
-    * ![elastigroup_created](https://user-images.githubusercontent.com/60588746/74618630-fca64500-5175-11ea-998a-672047c9b4d8.png)
+    ![elastigroup_created](https://user-images.githubusercontent.com/60588746/74618630-fca64500-5175-11ea-998a-672047c9b4d8.png)
 
 </details> 
 </h3>
