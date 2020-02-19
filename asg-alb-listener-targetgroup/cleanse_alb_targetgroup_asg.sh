@@ -15,7 +15,7 @@ aws autoscaling update-auto-scaling-group \
 --desired-capacity 0 \
 --min-size 0
 
-sleep 60
+sleep 300
 
 aws autoscaling delete-auto-scaling-group --region $region_code --auto-scaling-group-name $auto_scaling_group_name
 sleep 7
