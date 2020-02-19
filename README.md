@@ -23,6 +23,7 @@
 <h3>
 <details>
  <summary>Step 3. CloudFormation 사용 탭으로 연결계정 추가</summary>
+ 
 * * *
     1. 템플릿 열기 
     2. 연결할 AWS Account 계정에 해당되는 IAM User 로 로그인
