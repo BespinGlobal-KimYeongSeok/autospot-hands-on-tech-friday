@@ -9,6 +9,14 @@ aws elbv2 delete-target-group --region $region_code --target-group-arn $target_g
 sleep 7
 
 #3 오토스케일링 그룹 삭제
+aws autoscaling update-auto-scaling-group \
+--region $region_code \
+--auto-scaling-group-name $auto_scaling_group_name \
+--desired-capacity 0 \
+--min-size 0
+
+sleep 60
+
 aws autoscaling delete-auto-scaling-group --region $region_code --auto-scaling-group-name $auto_scaling_group_name
 sleep 7
 
