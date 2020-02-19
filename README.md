@@ -42,6 +42,8 @@
     5. 역할 ARN 복사 후 붙여 넣기 후 추가 버튼 클릭 후 계정등록 계속 진행
 * * *
 ![paste_role_arn](https://user-images.githubusercontent.com/60588746/73699692-d15c3880-4727-11ea-9f3a-badf5cc37dcd.png)
+
+* * *
 </details> 
 </h3>
 
@@ -285,7 +287,7 @@
     
     * * *
     
-      `$ git clone https://github.com/BespinGlobal-KimYeongSeok/autospot-hands-on-tech-friday`  
+      `$ git clone https://github.com/bespinglobal-opsnow/autospot-hands-on-tech-friday`  
       `$ cd autospot-hands-on-tech-friday/asg-alb-listener-targetgroup`  
       `$ source create_alb_targetgroup_asg.sh`  
     
@@ -367,10 +369,10 @@
         * AutoScaling그룹
         * 시작구성
         * KeyPair
-    
+  * * *  
     * 제공된 스크립트 실행으로 삭제 
       `$ ./cleanse_alb_targetgroup_asg.sh`  
-  
+  * * *
 </details> 
 </h3>
 
