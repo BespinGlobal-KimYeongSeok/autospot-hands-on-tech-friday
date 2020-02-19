@@ -198,15 +198,22 @@
     * Git 설치 
       *  Mac  
            * Step 1 – Homebrew 설치
+           
            * * *
+           
              * Terminal 윈도우에서 다음 명령어 실행  
-               `$ ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`       
-               `$ brew doctor`      
+               * `$ ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`
+               * `$ brew doctor`
+
            * * *
+           
            * Step 2 – Git 설치
+           
            * * *
+           
                * Terminal 윈도우에서 다음 명령어 실행  
-               `$ brew install git"`
+               
+               `$ brew install git`
            * * *
       *  Windows
           * Step 1 – [Chocolatey 설치](https://chocolatey.org/docs/installation)
@@ -242,29 +249,38 @@
         * AWS IAM 관리 콘솔에서 사용자 클릭
         * * *
         <img width="1667" alt="iam_user_click" src="https://user-images.githubusercontent.com/60588746/74792645-61da7180-5301-11ea-851e-ddf928c7c6d1.png">
+        
         * * *
         * 보안자격증명 탭에서 액세스키 만들기 클릭
+        
         * * *
         <img width="1675" alt="button_create_accesskey" src="https://user-images.githubusercontent.com/60588746/74792798-d0b7ca80-5301-11ea-8423-c864859b5245.png">
+        
         * * *
+        
         * 생성된 액세스키, 액세스 시크릿키 복사해놓기
+        
         * * *
         <img width="1675" alt="create_accesskey_success" src="https://user-images.githubusercontent.com/60588746/74792843-e927e500-5301-11ea-81a3-8c697afa735d.png">
-        * * *
+        
 
-
+      * * *
+      
       * Terminal Window 에서 다음 명령어 실행 후 ACCESS_KEY, SECRET_ACCESS_KEY, Default Region 입력. 
       * * *
-        * `$ aws configure`
-        * ![aws_configure](https://user-images.githubusercontent.com/60588746/74112543-f1d13a80-4be0-11ea-9872-316d936b4abd.png)
+        `$ aws configure`  
+          ![aws_configure](https://user-images.githubusercontent.com/60588746/74112543-f1d13a80-4be0-11ea-9872-316d936b4abd.png)
       * * *
       
     
     * 제공된 스크립트로 Application Load Balancer, Target Group, Listener, AutoScalingGroup 생성하기  
+    
     * * *
-      * `$ git clone https://github.com/BespinGlobal-KimYeongSeok/autospot-hands-on-tech-friday`  
-      * `$ cd autospot-hands-on-tech-friday/asg-alb-listener-targetgroup`  
-      * `$ source create_alb_targetgroup_asg.sh`  
+    
+      `$ git clone https://github.com/BespinGlobal-KimYeongSeok/autospot-hands-on-tech-friday`  
+      `$ cd autospot-hands-on-tech-friday/asg-alb-listener-targetgroup`  
+      `$ source create_alb_targetgroup_asg.sh`  
+    
     * * *  
     </details>
 
