@@ -270,6 +270,7 @@
 
   * Elastigroup 삭제
     <img width="1669" alt="choose_delete_esg" src="https://user-images.githubusercontent.com/60588746/74795043-3a3ad780-5308-11ea-839f-ac2aa9928a40.png">
+    * * *
   * AWS 자원 삭제
     * AWS 관리콘솔에서 직접 삭제 
       * 삭제대상
@@ -281,7 +282,7 @@
     
     * 제공된 스크립트 실행으로 삭제
     `$ ./cleanse_alb_targetgroup_asg.sh`  
-
+    * * *
 </details> 
 </h3>
 
