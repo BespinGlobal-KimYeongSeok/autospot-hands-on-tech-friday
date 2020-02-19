@@ -212,7 +212,7 @@
     * 제공된 스크립트로 Application Load Balancer, Target Group, Listener, AutoScalingGroup 생성하기  
       * `$ git clone https://github.com/BespinGlobal-KimYeongSeok/autospot-hands-on-tech-friday`  
       * `$ cd autospot-hands-on-tech-friday/asg-alb-listener-targetgroup`  
-      * `$ ./create_alb_targetgroup_asg.sh`  
+      * `$ source create_alb_targetgroup_asg.sh`  
 
     </details>
 
