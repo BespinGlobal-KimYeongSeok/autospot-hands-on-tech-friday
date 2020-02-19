@@ -64,7 +64,6 @@ init_variables(){
     created_key_name=""
     default_launch_configuration_name="default-launch-configuration"
     default_auto_scaling_group_name="default-autoscaling-group"
-    prog_name=$(basename $0)
     default_health_check_path="/phpinfo.php"
     
     
@@ -177,7 +176,7 @@ select_subnets_or_input(){
 ## 기본 리전정보 가져오기
 get_default_region_or_input(){
     echo "-------------------------------------------------------------------------------------"
-    echo "사용할 리전을 선택해주세요."
+    echo "사용할 리전을 선택해주세요. (Exit을 선택시 AWS Configure에 설정된 기본 리전값을 사용합니다.)"
     select region_name in ${default_region_arr[@]} exit
     do
         case $region_name in 
@@ -354,7 +353,7 @@ attach_loadblanacer_target_group(){
 }
 
 error_exit(){
-    echo "${prog_name}: ${1:-"Unknown Error"}" 1>&2
+    echo "${0}: ${1:-"Unknown Error"}" 1>&2
 }
 
 ##############
@@ -384,6 +383,14 @@ attach_loadblanacer_target_group
 #7
 if [ $? -eq 0 ]; then
     echo "Hands-on을 위한 실습자원 생성을 완료하였습니다."
+    # Exporting variables for cleansing shell
+    export region_code
+    export alb_arn
+    export target_group_arn
+    export auto_scaling_group_name
+    export launch_configuration_name
+    export created_key_name
+    #
 else 
     echo "Hands-on을 위한 실습자원 생성을 실패하였습니다."
     echo "생성한 자원을 삭제합니다."

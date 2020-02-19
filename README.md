@@ -194,6 +194,15 @@
           * [Windows](https://docs.aws.amazon.com/cli/latest/userguide/install-windows.html)
 
     * AWS Configure 구성 
+      * AWS IAM ACCESSKEY 생성하기  
+        * AWS IAM 관리 콘솔에서 사용자 클릭
+        <img width="1667" alt="iam_user_click" src="https://user-images.githubusercontent.com/60588746/74792645-61da7180-5301-11ea-851e-ddf928c7c6d1.png">
+        * 보안자격증명 탭에서 액세스키 만들기 클릭
+        <img width="1675" alt="button_create_accesskey" src="https://user-images.githubusercontent.com/60588746/74792798-d0b7ca80-5301-11ea-8423-c864859b5245.png">
+        * 생성된 액세스키, 액세스 시크릿키 복사해놓기
+        <img width="1675" alt="create_accesskey_success" src="https://user-images.githubusercontent.com/60588746/74792843-e927e500-5301-11ea-81a3-8c697afa735d.png">
+
+
       * Terminal Window 에서 다음 명령어 실행 후 ACCESS_KEY, SECRET_ACCESS_KEY, Default Region 입력. 
         * `$ aws configure`
         * ![aws_configure](https://user-images.githubusercontent.com/60588746/74112543-f1d13a80-4be0-11ea-9872-316d936b4abd.png)
