@@ -23,7 +23,7 @@
 <h3>
 <details>
  <summary>Step 3. CloudFormation 사용 탭으로 연결계정 추가</summary>
- 
+
 * * *
     1. 템플릿 열기 
     2. 연결할 AWS Account 계정에 해당되는 IAM User 로 로그인
@@ -58,6 +58,7 @@
 <h3>
 <details>
  <summary>Step 5. 연결계정별 AutoSpot 관리콘솔 진입</summary>
+
 * * *
     1. 관리할 연결 계정을 목록에서 클릭
     2. 관리콘솔 화면 이동 후 초기화면 확인
