@@ -116,8 +116,13 @@
          * 시작구성 인트턴스 타입 선택
            ![asg_config_instancetype](https://user-images.githubusercontent.com/60588746/74622668-04b9b100-5185-11ea-96f7-9ed7228de953.png)
            * * *
-         * 시작구성 이름 설정
+         * 세부정보 구성
+           * 이름입력
            ![asg_config_name](https://user-images.githubusercontent.com/60588746/74622697-29158d80-5185-11ea-8fc1-a2158a04df3c.png)
+          * 사용자 데이터 복사 붙여넣기 [링크](https://github.com/bespinglobal-opsnow/autospot-hands-on-tech-friday/blob/master/asg-alb-listener-targetgroup/instance-setup.sh)
+          <img width="1506" alt="user_data" src="https://user-images.githubusercontent.com/60588746/74796450-f2b64a80-530b-11ea-8a90-a14dd583729a.png">
+
+
            * * *
          * 시작구성 스토리지 구성
            ![asg_config_storage](https://user-images.githubusercontent.com/60588746/74622712-39c60380-5185-11ea-9f86-9e998bc11c46.png)
@@ -197,23 +202,26 @@
       * AWS IAM ACCESSKEY 생성하기  
         * AWS IAM 관리 콘솔에서 사용자 클릭
         <img width="1667" alt="iam_user_click" src="https://user-images.githubusercontent.com/60588746/74792645-61da7180-5301-11ea-851e-ddf928c7c6d1.png">
+        * * *
         * 보안자격증명 탭에서 액세스키 만들기 클릭
         <img width="1675" alt="button_create_accesskey" src="https://user-images.githubusercontent.com/60588746/74792798-d0b7ca80-5301-11ea-8423-c864859b5245.png">
+        * * *
         * 생성된 액세스키, 액세스 시크릿키 복사해놓기
         <img width="1675" alt="create_accesskey_success" src="https://user-images.githubusercontent.com/60588746/74792843-e927e500-5301-11ea-81a3-8c697afa735d.png">
+        * * *
 
 
       * Terminal Window 에서 다음 명령어 실행 후 ACCESS_KEY, SECRET_ACCESS_KEY, Default Region 입력. 
         * `$ aws configure`
         * ![aws_configure](https://user-images.githubusercontent.com/60588746/74112543-f1d13a80-4be0-11ea-9872-316d936b4abd.png)
-  
+        * * *
       
     
     * 제공된 스크립트로 Application Load Balancer, Target Group, Listener, AutoScalingGroup 생성하기  
       * `$ git clone https://github.com/BespinGlobal-KimYeongSeok/autospot-hands-on-tech-friday`  
       * `$ cd autospot-hands-on-tech-friday/asg-alb-listener-targetgroup`  
       * `$ source create_alb_targetgroup_asg.sh`  
-
+      
     </details>
 
 </details> 
