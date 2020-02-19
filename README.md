@@ -256,7 +256,26 @@
 </details> 
 </h3>
 
+<h3>
+ <details>
+ <summary>Step 4. 자원 삭제  </summary>
 
+  * Elastigroup 삭제
+    <img width="1669" alt="choose_delete_esg" src="https://user-images.githubusercontent.com/60588746/74795043-3a3ad780-5308-11ea-839f-ac2aa9928a40.png">
+  * AWS 자원 삭제
+    * AWS 관리콘솔에서 직접 삭제 
+      * 삭제대상
+        * 로드밸런서
+        * 대상그룹
+        * AutoScaling그룹
+        * 시작구성
+        * KeyPair
+    
+    * 제공된 스크립트 실행으로 삭제
+    `$ ./cleanse_alb_targetgroup_asg.sh`  
+
+</details> 
+</h3>
 
 
 
