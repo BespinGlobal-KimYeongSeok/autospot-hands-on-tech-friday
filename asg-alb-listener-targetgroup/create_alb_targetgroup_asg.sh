@@ -354,6 +354,7 @@ attach_loadblanacer_target_group(){
 
 error_exit(){
     echo "${0}: ${1:-"Unknown Error"}" 1>&2
+    exit 1
 }
 
 ##############
